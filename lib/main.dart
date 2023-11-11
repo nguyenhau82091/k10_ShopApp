@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:k10_shopapp/auth/login.dart';
+import 'package:k10_shopapp/home_menu.dart';
 import 'package:k10_shopapp/screen/onboarding.dart';
 
 void main() {
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home:  OnBoardingPage(),
+      
     );
   }
 }

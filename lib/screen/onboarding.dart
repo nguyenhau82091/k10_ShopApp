@@ -38,7 +38,7 @@ class OnBoardingPage extends StatelessWidget {
       foregroundColor: const Color.fromARGB(255, 205, 75, 0),
       introductionList: list,
       onTapSkipButton: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomeMenu())),
+          context, MaterialPageRoute(builder: (context) => const LoginPage())),
       skipTextStyle: const TextStyle(
         color: Colors.blueGrey,
         fontSize: 18.0,
