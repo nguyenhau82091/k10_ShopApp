@@ -46,7 +46,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               const SizedBox(
                 height: 10,
               ),
-              Text(
+              const Text(
                 "   Bạn Quên Mật Khẩu? Đừng Lo, Đây Là Cách Khôi Phục Tài Khoản Của Bạn!",
                 style: TextStyle(
                   color: Colors.white,

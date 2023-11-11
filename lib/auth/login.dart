@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:k10_shopapp/auth/forgotpassword.dart';
 import 'package:k10_shopapp/auth/register.dart';
+import 'package:k10_shopapp/home_menu.dart';
 import 'package:k10_shopapp/utils/color_utils.dart';
 import 'package:k10_shopapp/widget/my_button.dart';
 import 'package:k10_shopapp/widget/reusable_widget.dart';
@@ -14,6 +16,7 @@ class LoginPage extends StatefulWidget {
 
 void login() {
   print("login");
+  
 }
 
 Future<void> loginWithGoogle() async {

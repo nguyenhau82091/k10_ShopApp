@@ -39,6 +39,8 @@ dependencies:
   onboarding: ^3.1.0
   smooth_page_indicator: ^1.1.0
   intro_screen_onboarding_flutter: ^1.0.0
+  google_nav_bar: ^5.0.6
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:

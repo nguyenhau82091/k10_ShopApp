@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intro_screen_onboarding_flutter/introduction.dart';
 import 'package:intro_screen_onboarding_flutter/introscreenonboarding.dart';
 import 'package:k10_shopapp/auth/login.dart';
+import 'package:k10_shopapp/home_menu.dart';
 
 class OnBoardingPage extends StatelessWidget {
   OnBoardingPage({super.key});
@@ -34,10 +35,10 @@ class OnBoardingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return IntroScreenOnboarding(
       backgroudColor: const Color(0xFFf9f9f9),
-      foregroundColor: const Color(0xFFFFAA00),
+      foregroundColor: const Color.fromARGB(255, 205, 75, 0),
       introductionList: list,
       onTapSkipButton: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const LoginPage())),
+          context, MaterialPageRoute(builder: (context) => const HomeMenu())),
       skipTextStyle: const TextStyle(
         color: Colors.blueGrey,
         fontSize: 18.0,
