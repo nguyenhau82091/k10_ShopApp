@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:k10_shopapp/screen/splash.dart';
+import 'package:k10_shopapp/screen/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const Splash(),
+      home: const HomeScreen(),
 
     );
   }
