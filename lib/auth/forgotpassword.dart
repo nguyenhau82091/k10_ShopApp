@@ -13,6 +13,7 @@ class ResetPassword extends StatefulWidget {
 
 class _ResetPasswordState extends State<ResetPassword> {
   TextEditingController _emailTextController = TextEditingController();
+  TextEditingController _passwordTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,10 +59,16 @@ class _ResetPasswordState extends State<ResetPassword> {
               const SizedBox(
                 height: 20,
               ),
+              reusableTextField("Nhập mật khẩu mới", Icons.lock_outline, true,
+                  _passwordTextController),
+              const SizedBox(
+                height: 20,
+              ),
               MyButton(
                   text: 'Send',
                   onTap: () {
-                    AuthService.ForgotPassword(_emailTextController.text);
+                    AuthService.ForgotPassword(_emailTextController.text,
+                        _passwordTextController.text);
                     Navigator.pop(context);
                   })
             ]),
