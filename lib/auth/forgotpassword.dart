@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k10_shopapp/service/auth_service.dart';
 import 'package:k10_shopapp/utils/color_utils.dart';
 import 'package:k10_shopapp/widget/my_button.dart';
 import 'package:k10_shopapp/widget/reusable_widget.dart';
@@ -8,10 +9,6 @@ class ResetPassword extends StatefulWidget {
 
   @override
   _ResetPasswordState createState() => _ResetPasswordState();
-}
-
-void forgot() {
-  print("forgot");
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
@@ -61,7 +58,12 @@ class _ResetPasswordState extends State<ResetPassword> {
               const SizedBox(
                 height: 20,
               ),
-              MyButton(text: 'Send', onTap: forgot)
+              MyButton(
+                  text: 'Send',
+                  onTap: () {
+                    AuthService.ForgotPassword(_emailTextController.text);
+                    Navigator.pop(context);
+                  })
             ]),
           ))),
     );
