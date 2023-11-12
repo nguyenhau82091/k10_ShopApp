@@ -1,20 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:k10_shopapp/model/product_model.dart';
 
-class DetailProduct extends StatefulWidget {
-  const DetailProduct({super.key});
+class detailProcuct extends StatelessWidget {
+  final Product product;
 
-  @override
-  State<DetailProduct> createState() => _DetailProductState();
-}
-
-class _DetailProductState extends State<DetailProduct> {
-  List<String> imageUrls = [
-    "http://drive.google.com/uc?export=view&id=12wzSgzhfQa-Zr7vnmlxr8f6xoju2V69Q",
-    "http://drive.google.com/uc?export=view&id=1g5YuwVbLrCApWX6HragPsgytO_sMqzj-",
-    "http://drive.google.com/uc?export=view&id=1SvOxB9xc0EWcsj78btoZbAskWn4mmz_5",
-    "http://drive.google.com/uc?export=view&id=1sjSMlsT_2vd-3ihsPTGqsUBFVi6ocZ0i",
-    "http://drive.google.com/uc?export=view&id=10L1-2Rzvu2k-6CNePtomM90-XjYlqiQR"
-  ];
+  const detailProcuct({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +38,7 @@ class _DetailProductState extends State<DetailProduct> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          "http://drive.google.com/uc?export=view&id=12RVQ5VCX-IIL3gbdVjidBOFp3nr9_ViY",
+                          product.imgUrls[0],
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: 150,
@@ -62,7 +52,7 @@ class _DetailProductState extends State<DetailProduct> {
                       height: 100,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: imageUrls.length,
+                        itemCount: product.imgUrls.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: EdgeInsets.only(right: 20),
@@ -83,7 +73,7 @@ class _DetailProductState extends State<DetailProduct> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  imageUrls[index],
+                                  product.imgUrls[index],
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: 150,
@@ -101,7 +91,7 @@ class _DetailProductState extends State<DetailProduct> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "JilGyungYi Pro",
+                          product.name,
                           style:
                               TextStyle(fontSize: 24, color: Color(0xffc89595)),
                         ),
@@ -114,7 +104,7 @@ class _DetailProductState extends State<DetailProduct> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "279.000 Đ",
+                          "${product.price}",
                           style:
                               TextStyle(fontSize: 24, color: Color(0xffc89595)),
                         ),
@@ -149,10 +139,7 @@ class _DetailProductState extends State<DetailProduct> {
                           width: 20,
                         ),
                         GestureDetector(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DetailProduct())),
+                            onTap: () => {},
                             child: Container(
                               width: 200,
                               height: 50,

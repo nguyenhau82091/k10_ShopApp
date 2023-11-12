@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
 
-class ItemProduct extends StatefulWidget {
-  final String? title;
-  final String? slogan;
-  final String? mainUse;
-  final List<String>? urls;
+class ItemProduct extends StatelessWidget {
+  final String title;
+  final String slogan;
+  final String mainUse;
+  final List<String> urls;
   final VoidCallback? onTap;
 
   const ItemProduct({
     Key? key,
-    this.title,
-    this.slogan,
-    this.mainUse,
-    this.urls,
+    required this.title,
+    required this.slogan,
+    required this.mainUse,
+    required this.urls,
     this.onTap,
   }) : super(key: key);
 
-  @override
-  State<ItemProduct> createState() => _ItemProductState();
-}
-
-class _ItemProductState extends State<ItemProduct> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -35,11 +30,12 @@ class _ItemProductState extends State<ItemProduct> {
               spreadRadius: 2,
               blurRadius: 4,
               offset: Offset(0, 2),
-            )
+            ),
           ],
         ),
-        child: ListTile(
-          title: Column(
+        child: InkWell(
+          onTap: onTap,
+          child: Column(
             children: [
               Container(
                 decoration: BoxDecoration(
@@ -56,7 +52,7 @@ class _ItemProductState extends State<ItemProduct> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(
-                    widget.urls![0],
+                    urls![0],
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 150,
@@ -68,7 +64,7 @@ class _ItemProductState extends State<ItemProduct> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    widget.title!,
+                    title!,
                     style: TextStyle(fontSize: 20, color: Color(0xffc89595)),
                   ),
                 ],
@@ -78,7 +74,7 @@ class _ItemProductState extends State<ItemProduct> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    widget.slogan!,
+                    slogan!,
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ],
@@ -102,25 +98,22 @@ class _ItemProductState extends State<ItemProduct> {
                 ],
               ),
               SizedBox(height: 30),
-              Text(widget.mainUse!),
+              Text(mainUse),
               SizedBox(height: 30),
-              GestureDetector(
-                onTap: widget.onTap,
-                child: Container(
-                  width: 200,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Color(0xffc89595),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Xem Chi Tiết",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+              Container(
+                width: 200,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Color(0xffc89595),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Center(
+                  child: Text(
+                    "Xem Chi Tiết",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

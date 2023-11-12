@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../model/product_model.dart';
 import '../service/product_service.dart';
 import '../widget/item_product.dart';
+import 'detail/detailproduct_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -15,19 +16,22 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = false;
   List<Product> products = [];
 
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   Future<void> getData() async {
     try {
-      // Assuming productService is an instance of your ProductService class
-      final fetchData = await productService.fetchData();
+      final fetchData = await ProductService.fetchData();
       if (fetchData != null) {
         setState(() {
           products = fetchData;
-          print(products);
           isLoading = true;
         });
       }
     } catch (error) {
-      // Handle any errors that occur during the fetchData process
       print('Error fetching data: $error');
     }
   }
@@ -36,16 +40,28 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: FutureBuilder(
-            future: getData(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(itemBuilder: (context, index) {});
-              }
-              return Center(
+        body: isLoading
+            ? ListView.builder(
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return ItemProduct(
+                    title: product.name,
+                    slogan: product.slogan,
+                    mainUse: product.mainUse,
+                    urls: product.imgUrls,
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => detailProcuct(
+                                  product: product,
+                                ))),
+                  );
+                },
+              )
+            : Center(
                 child: CircularProgressIndicator(),
-              );
-            }),
+              ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // Add functionality for FloatingActionButton onPressed
