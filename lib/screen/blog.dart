@@ -1,45 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:k10_shopapp/service/new_service.dart';
 
-class BlogPage extends StatelessWidget {
-  final List<Map<String, String>> list = [
-    {
-      'imageUrl':
-          'http://drive.google.com/uc?export=view&id=12qiXwb21RXBHrLoJORO71j8_igRMzARd',
-      'description':
-          'Có nên dùng dung dịch vệ sinh phụ nữ hàng ngày không? \nDung dịch vệ sinh là sản phẩm chăm sóc vùng kín dành cho nữ giới, mặc dù được sử dụng phổ biến trong cuộc sống hàng ngày nhưng không phải ai cũng hiểu rõ về sản phẩm này. Tham....',
-    },
-    {
-      'imageUrl':
-          'http://drive.google.com/uc?export=view&id=1tl_F-TjxXqsMWeKhBBzKFzRZEfePTwlP',
-      'description':
-          'Độ tuổi nào có thể sử dụng dung dịch vệ sinh phụ nữ? \nDung dịch vệ sinh phụ nữ là một sản phẩm làm sạch vùng kín, ngăn ngừa viêm nhiễm phụ khoa cho các bạn nữ. Vậy độ tuổi nào sẽ thích hợp để sử dụng sản phẩm này? Các bước sử dụn...',
-    },
-    {
-      'imageUrl':
-          'http://drive.google.com/uc?export=view&id=1gssjvbmChcuZDzrsh3A-14lWr6Qg9wss',
-      'description':
-          'Mang thai có được dùng dung dịch vệ sinh không?\n Loại nào tốt...Việc vệ sinh vùng kín là rất quan trọng đối với chị em phụ nữ, đặc biệt là với mẹ bầu. Tuy nhiên, khi mang thai có được dùng dung dịch vệ sinh hay không là câu hỏi luôn nhận đ...',
-    },
-    {
-      'imageUrl':
-          'http://drive.google.com/uc?export=view&id=14X8aChCtcPKA7V3IczWh2bLH0jGAbPZR',
-      'description':
-          'Vùng kín bị thâm đen lý do?\nVùng kín bị thâm thường khiến chị em phụ nữ không còn hài lòng với cơ thể mình, tự ti trong chuyện gối chăn. Tuy nhiên, thâm vùng kín lại là kết quả tự nhiên không thể tránh k...',
-    },
-  ];
+import '../model/news.model.dart';
+
+class BlogPage extends StatefulWidget {
+  const BlogPage({super.key});
+
+  @override
+  State<BlogPage> createState() => _BlogPageState();
+}
+
+class _BlogPageState extends State<BlogPage> {
+  bool isLoading = false;
+  List<New> news = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    try {
+      final getData = await newService.fetchNew();
+      if (getData != null) {
+        setState(() {
+          news = getData;
+          isLoading = true;
+        });
+      }
+    } catch (e) {
+      print("Lỗi rồi........$e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          return BlogCard(
-            imageUrl: list[index]['imageUrl']!, // Get image URL from the list
-            description: list[index]['description']!,
-          );
-        },
-      ),
-    );
+        body: isLoading
+            ? ListView.builder(
+                itemCount: news.length,
+                itemBuilder: (context, index) {
+                  final blog = news[index];
+                  return BlogCard(
+                    imageUrl: blog.imgMain,
+                    description: blog.title,
+                  );
+                })
+            : Center(
+                child: CircularProgressIndicator(),
+              ));
   }
 }
 
