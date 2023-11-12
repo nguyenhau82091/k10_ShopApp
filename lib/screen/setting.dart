@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -33,6 +34,7 @@ class SettingPage extends StatelessWidget {
             title: Text("Đăng xuất"),
             leading: Icon(Icons.logout),
             onTap: () {
+              Navigator.pushReplacementNamed(context, '/login');
               // Log out user
             },
           ),
@@ -41,4 +43,3 @@ class SettingPage extends StatelessWidget {
     );
   }
 }
-  
