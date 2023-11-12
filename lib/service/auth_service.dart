@@ -74,7 +74,7 @@ class AuthService {
 
   static Future<void> loginGG() async {}
 
-  static Future<bool> ForgotPassword(String email) async {
+  static Future<bool> ForgotPassword(String email,String newpw) async {
     final apiUrl = API_FORGOT_PASSWORD;
 
     try {
@@ -83,13 +83,13 @@ class AuthService {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{'email': email}),
+        body: jsonEncode(<String, String>{'email': email,'newPassword':newpw}),
       );
       final Map<String, dynamic> responseBody = json.decode(response.body);
 
       if (response.statusCode == 201) {
         // Navigator.pushReplacementNamed(context, 'login');
-        print('Vui lòng kiểm tra email để lấy lại mật khẩu');
+        print('Vui lòng kiểm tra email ');
         return true;
       } else {
         print('Login failed with status code: ${response.statusCode}');
