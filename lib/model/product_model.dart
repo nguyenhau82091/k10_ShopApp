@@ -3,13 +3,27 @@
 //     final product = productFromJson(jsonString);
 import 'dart:convert';
 
-List<Product> productFromJson(String str) =>
-    List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
+Product productFromJson(String str) => Product.fromJson(json.decode(str));
 
-String productToJson(List<Product> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String productToJson(Product data) => json.encode(data.toJson());
 
 class Product {
+  final List<Datum> data;
+
+  Product({
+    required this.data,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) => Product(
+    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "data": List<dynamic>.from(data.map((x) => x.toJson())),
+  };
+}
+
+class Datum {
   final String id;
   final Status status;
   final String name;
@@ -26,10 +40,11 @@ class Product {
   final String commit;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final int v;
   final bool isShow;
   final dynamic deletedAt;
 
-  Product({
+  Datum({
     required this.id,
     required this.status,
     required this.name,
@@ -46,56 +61,63 @@ class Product {
     required this.commit,
     required this.createdAt,
     required this.updatedAt,
+    required this.v,
     required this.isShow,
     required this.deletedAt,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
-        id: json["_id"],
-        status: statusValues.map[json["status"]]!,
-        name: json["name"],
-        amount: json["amount"],
-        price: json["price"],
-        imgUrls: List<String>.from(json["imgUrls"].map((x) => x)),
-        categoryCode: json["categoryCode"],
-        mainUse: json["mainUse"],
-        slogan: json["slogan"],
-        ingredient: json["ingredient"],
-        where: json["where"],
-        license: json["license"],
-        certificate: json["certificate"],
-        commit: json["commit"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        isShow: json["isShow"],
-        deletedAt: json["deletedAt"],
-      );
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    id: json["_id"],
+    status: statusValues.map[json["status"]]!,
+    name: json["name"],
+    amount: json["amount"],
+    price: json["price"],
+    imgUrls: List<String>.from(json["imgUrls"].map((x) => x)),
+    categoryCode: json["categoryCode"],
+    mainUse: json["mainUse"],
+    slogan: json["slogan"],
+    ingredient: json["ingredient"],
+    where: json["where"],
+    license: json["license"],
+    certificate: json["certificate"],
+    commit: json["commit"],
+    createdAt: DateTime.parse(json["createdAt"]),
+    updatedAt: DateTime.parse(json["updatedAt"]),
+    v: json["__v"],
+    isShow: json["isShow"],
+    deletedAt: json["deletedAt"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "_id": id,
-        "status": statusValues.reverse[status],
-        "name": name,
-        "amount": amount,
-        "price": price,
-        "imgUrls": List<dynamic>.from(imgUrls.map((x) => x)),
-        "categoryCode": categoryCode,
-        "mainUse": mainUse,
-        "slogan": slogan,
-        "ingredient": ingredient,
-        "where": where,
-        "license": license,
-        "certificate": certificate,
-        "commit": commit,
-        "createdAt": createdAt.toIso8601String(),
-        "updatedAt": updatedAt.toIso8601String(),
-        "isShow": isShow,
-        "deletedAt": deletedAt,
-      };
+    "_id": id,
+    "status": statusValues.reverse[status],
+    "name": name,
+    "amount": amount,
+    "price": price,
+    "imgUrls": List<dynamic>.from(imgUrls.map((x) => x)),
+    "categoryCode": categoryCode,
+    "mainUse": mainUse,
+    "slogan": slogan,
+    "ingredient": ingredient,
+    "where": where,
+    "license": license,
+    "certificate": certificate,
+    "commit": commit,
+    "createdAt": createdAt.toIso8601String(),
+    "updatedAt": updatedAt.toIso8601String(),
+    "__v": v,
+    "isShow": isShow,
+    "deletedAt": deletedAt,
+  };
 }
 
-enum Status { ACTIVE }
+enum Status {
+  ACTIVE
+}
 
-final statusValues = EnumValues({"active": Status.ACTIVE});
+final statusValues = EnumValues({
+  "active": Status.ACTIVE
+});
 
 class EnumValues<T> {
   Map<String, T> map;

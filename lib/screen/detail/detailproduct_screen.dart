@@ -22,7 +22,7 @@ class _DetailProductState extends State<DetailProduct> {
         child: Scaffold(
             appBar: AppBar(
               title: Image.asset(
-                "assets/logo.png",
+                "assets/logo/logo.png",
                 width: 70,
               ),
               backgroundColor: Color(0xffc89595),
