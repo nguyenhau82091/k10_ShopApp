@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:k10_shopapp/auth/login.dart';
 import 'package:k10_shopapp/home_menu.dart';
+import 'package:k10_shopapp/screen/chatpage.dart';
 import 'package:k10_shopapp/screen/home_screen.dart';
 import 'package:k10_shopapp/screen/onboarding.dart';
 
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/home': (context) => HomeMenu(),
+        '/chat': (context) => ChatPage(),
       },
     );
   }
