@@ -16,10 +16,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class UserAccount {
+  final String userId;
   final String email;
   final String password;
 
-  UserAccount(this.email, this.password);
+  UserAccount(this.email, this.password, {this.userId = ''});
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -58,17 +59,19 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> saveUserAccount() async {
     final prefs = await SharedPreferences.getInstance();
+    prefs.setString('userId', _currentUser?.userId ?? '');
     prefs.setString('email', _currentUser?.email ?? '');
     prefs.setString('password', _currentUser?.password ?? '');
   }
 
   Future<void> loadUserAccount() async {
     final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
     final email = prefs.getString('email');
     final password = prefs.getString('password');
-    if (email != null && password != null) {
+    if (userId != null && email != null && password != null) {
       setState(() {
-        _currentUser = UserAccount(email, password);
+        _currentUser = UserAccount(email, password, userId: userId);
       });
     }
   }
