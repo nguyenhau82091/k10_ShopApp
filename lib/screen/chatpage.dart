@@ -15,7 +15,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   List<types.Message> _messages = [];
   final _user = const types.User(
-    id: '',
+    id: '655045f3be66b7c8af84eb05',
   );
 
   Future<void> _sendMessage(String text) async {

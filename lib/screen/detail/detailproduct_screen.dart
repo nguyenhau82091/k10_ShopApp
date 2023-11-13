@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k10_shopapp/auth/login.dart';
 import 'package:k10_shopapp/model/product_model.dart';
 
 class detailProcuct extends StatelessWidget {
@@ -116,7 +117,9 @@ class detailProcuct extends StatelessWidget {
                     Row(
                       children: [
                         GestureDetector(
-                            onTap: () => {},
+                            onTap: () => {
+                             
+                            },
                             child: Container(
                               width: 150,
                               height: 50,

@@ -13,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  
   bool isLoading = false;
   List<Product> products = [];
 
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getData();
   }
-
+  
   Future<void> getData() async {
     try {
       final fetchData = await ProductService.fetchData();

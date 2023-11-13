@@ -1,8 +1,16 @@
 import 'dart:convert';
 import 'package:k10_shopapp/api/api.dart';
 import 'package:http/http.dart' as http;
+import 'package:k10_shopapp/auth/login.dart';
+import 'package:k10_shopapp/model/user_Model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
+  static Future<void> _saveLoginStatus(bool isLoggedIn) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', isLoggedIn);
+  }
+
   static Future<bool> registerUser(
       String name, String email, String password) async {
     final apiUrl = API_REGISTER;
@@ -41,8 +49,8 @@ class AuthService {
   }
 
   static Future<bool> login(String email, String password) async {
+    User? _loginUser;
     final apiUrl = API_LOGIN;
-  
 
     try {
       final response = await http.post(
@@ -56,8 +64,20 @@ class AuthService {
       final Map<String, dynamic> responseBody = json.decode(response.body);
 
       if (response.statusCode == 200) {
-        final responseJson = json.decode(response.body);
-        // Navigator.pushReplacementNamed(context, 'login');
+        _saveLoginStatus(true);
+
+        // // Save user data using SharedPreferences
+        // SharedPreferences prefs = await SharedPreferences.getInstance();
+        // prefs.setString('userId', _loginUser!.id); // Save userID here
+
+        // prefs.setString('userEmail', _loginUser!.email);
+        // prefs.setString('userToken', _loginUser!.token);
+        // prefs.setBool('userVerified', _loginUser!.verified);
+        // prefs.setString(
+        //     'userCreatedAt', _loginUser!.createdAt.toIso8601String());
+
+        // UserManager().setUser(_loginUser!);
+
         print('đăng nhập thành công');
         print(response.body);
         return true;
