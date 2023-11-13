@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:k10_shopapp/model/product_model.dart';
+import '../../service/cart_service.dart';
+import '../../widget/customToast.dart';
+import '../oder_screen.dart';
 
 class detailProcuct extends StatelessWidget {
   final Product product;
 
-  const detailProcuct({super.key, required this.product});
+  const detailProcuct({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +119,14 @@ class detailProcuct extends StatelessWidget {
                     Row(
                       children: [
                         GestureDetector(
-                            onTap: () => {},
+                            onTap: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => OrderScreen(
+                                                product: product,
+                                              )))
+                                },
                             child: Container(
                               width: 150,
                               height: 50,
@@ -139,7 +149,15 @@ class detailProcuct extends StatelessWidget {
                           width: 20,
                         ),
                         GestureDetector(
-                            onTap: () => {},
+                            onTap: () {
+                              final productst = product.id;
+                              final token =
+                                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTUwNzhjOGJlNjZiN2M4YWY4NGYwZTciLCJlbWFpbCI6InZpbmhkZXYzMUBnbWFpbC5jb20iLCJpYXQiOjE2OTk3OTkzOTMsImV4cCI6MTcwMjM5MTM5M30.pQtLxNScgtmF_KcJ_d0kvJYO5SLqWVYf2CbHM2fmCmw";
+                              final user = "655078c8be66b7c8af84f0e7";
+                              CartService.addCart(productst, user, token);
+                              CustomToast.showCenterShortToast(
+                                  "Thêm thành công");
+                            },
                             child: Container(
                               width: 200,
                               height: 50,

@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Add functionality for FloatingActionButton onPressed
+            Navigator.pushNamed(context, '/chat');
           },
           backgroundColor: Color(0xffc89595),
           child: Icon(

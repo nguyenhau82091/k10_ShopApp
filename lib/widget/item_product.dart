@@ -34,7 +34,6 @@ class ItemProduct extends StatelessWidget {
           ],
         ),
         child: InkWell(
-          onTap: onTap,
           child: Column(
             children: [
               Container(
@@ -100,20 +99,24 @@ class ItemProduct extends StatelessWidget {
               SizedBox(height: 30),
               Text(mainUse),
               SizedBox(height: 30),
-              Container(
-                width: 200,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Color(0xffc89595),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                  child: Text(
-                    "Xem Chi Tiết",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+
+              GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Color(0xffc89595),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Xem Chi Tiết",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
