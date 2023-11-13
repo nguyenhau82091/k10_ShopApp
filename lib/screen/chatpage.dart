@@ -5,17 +5,6 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:http/http.dart' as http;
 import 'package:k10_shopapp/api/api.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ChatPage(),
-    );
-  }
-}
-
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
 
@@ -26,9 +15,8 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   List<types.Message> _messages = [];
   final _user = const types.User(
-    id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
+    id: '',
   );
-
 
   Future<void> _sendMessage(String text) async {
     try {
@@ -52,7 +40,6 @@ class _ChatPageState extends State<ChatPage> {
       print('Error sending message: $e');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +65,6 @@ class _ChatPageState extends State<ChatPage> {
               color: Colors.white,
             ),
           ),
-
         ),
       ),
     );
@@ -95,7 +81,6 @@ class _ChatPageState extends State<ChatPage> {
     _addMessage(textMessage);
     _sendMessage(message.text); // Gửi tin nhắn qua API
   }
-
 
   void _addMessage(types.Message message) {
     setState(() {
