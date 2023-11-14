@@ -18,7 +18,7 @@ class _HomeMenuState extends State<HomeMenu> {
     const HomeScreen(),
     const CartPage(),
     BlogPage(),
-    const SettingPage(),
+    const SettingsScreen(),
   ];
 
   @override

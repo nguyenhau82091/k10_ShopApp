@@ -44,6 +44,9 @@ dependencies:
   google_nav_bar: ^5.0.6
   get: ^4.6.6
   google_sign_in: ^6.1.6
+  flutter_highlight: ^0.7.0
+  ionicons: ^0.2.2
+  iconsax: ^0.0.8
 
 dev_dependencies:
   flutter_test:
