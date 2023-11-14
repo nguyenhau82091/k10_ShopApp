@@ -25,16 +25,18 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    checkLoggedInStatus().then((isLoggedIn) {
-      if (!isLoggedIn) {
-        Navigator.pushReplacementNamed(context, '/home');
-      }
-    });
+    // checkLoggedInStatus().then((isLoggedIn) {
+    //   if (!isLoggedIn) {
+    //     Navigator.pushReplacementNamed(context, '/home');
+    //   }
+    // });
   }
 
   Future<void> getData() async {
     final email = _emailTextController.text;
     final password = _passwordTextController.text;
+    print(email);
+    print(password);
 
     if (email.isEmpty || password.isEmpty) {
       _showErrorDialog('Vui lòng nhập đầy đủ thông tin.');
@@ -43,16 +45,16 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final login = await AuthService.login(email, password);
-
+      print('login ${login}');
       if (login) {
         setState(() {
           _isLoading = true;
         });
 
         // Store user login information in SharedPreferences
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool('isLoggedIn', true);
-        prefs.setString('email', email);
+        // SharedPreferences prefs = await SharedPreferences.getInstance();
+        // prefs.setBool('isLoggedIn', true);
+        // prefs.setString('email', email);
 
 
         Navigator.pushReplacementNamed(context, '/home');
@@ -65,10 +67,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<bool> checkLoggedInStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false;
-  }
+  // Future<bool> checkLoggedInStatus() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   return prefs.getBool('isLoggedIn') ?? false;
+  // }
 
   void _showErrorDialog(String message) {
     showDialog(
