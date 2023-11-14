@@ -5,10 +5,26 @@ import '../../service/saveUser_service.dart';
 import '../../widget/customToast.dart';
 import '../oder_screen.dart';
 
-class detailProcuct extends StatelessWidget {
+class detailProduct extends StatelessWidget {
   final Product product;
 
-  const detailProcuct({Key? key, required this.product}) : super(key: key);
+  const detailProduct({Key? key, required this.product}) : super(key: key);
+
+  Future<void> creatCart() async {
+    final currentUser = await UserManager().getUser();
+    final productst = product.id;
+    final image = product.imgUrls[0];
+    final price = product.price;
+    final name = product.name;
+    int quantity = 1;
+    final user = currentUser!.id;
+    bool productAdded = await CartService.checkItemCart(productst,user);
+    if (productAdded) {
+      return CustomToast.showCenterShortToast("Sản phẩm đã tồn tại");
+    }
+    CartService.addCart(productst, user, image, price, quantity, name);
+    CustomToast.showCenterShortToast("Thêm thành công");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,15 +166,7 @@ class detailProcuct extends StatelessWidget {
                           width: 20,
                         ),
                         GestureDetector(
-                            onTap: () {
-                              final productst = product.id;
-                              final token =
-                                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTUwNzhjOGJlNjZiN2M4YWY4NGYwZTciLCJlbWFpbCI6InZpbmhkZXYzMUBnbWFpbC5jb20iLCJpYXQiOjE2OTk3OTkzOTMsImV4cCI6MTcwMjM5MTM5M30.pQtLxNScgtmF_KcJ_d0kvJYO5SLqWVYf2CbHM2fmCmw";
-                              final user = "655078c8be66b7c8af84f0e7";
-                              CartService.addCart(productst, user, token);
-                              CustomToast.showCenterShortToast(
-                                  "Thêm thành công");
-                            },
+                            onTap: creatCart,
                             child: Container(
                               width: 200,
                               height: 50,

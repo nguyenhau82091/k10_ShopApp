@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => detailProcuct(
+                            builder: (context) => detailProduct(
                                   product: product,
                                 ))),
                   );

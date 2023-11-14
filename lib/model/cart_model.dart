@@ -2,58 +2,46 @@
 //
 //     final cart = cartFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
-Cart cartFromJson(String str) => Cart.fromJson(json.decode(str));
+List<Cart> categoryFromJson(String str) =>
+    List<Cart>.from(json.decode(str).map((x) => Cart.fromJson(x)));
 
-String cartToJson(Cart data) => json.encode(data.toJson());
-
+String categoryToJson(List<Cart> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Cart {
-  final String id;
-  final String user;
-  final List<Product> products;
+  final String idProduct;
+  final String image;
+  final String name;
+  final int price;
+  final int quantity;
+  final String userId;
 
   Cart({
-    required this.id,
-    required this.user,
-    required this.products,
+    required this.idProduct,
+    required this.image,
+    required this.name,
+    required this.price,
+    required this.quantity,
+    required this.userId,
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) => Cart(
-    id: json["_id"],
-    user: json["user"],
-    products: List<Product>.from(json["products"].map((x) => Product.fromJson(x))),
-  );
+        idProduct: json["idProduct"],
+        image: json["image"],
+        name: json["name"],
+        price: json["price"],
+        quantity: json["quantity"],
+        userId: json["userId"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "_id": id,
-    "user": user,
-    "products": List<dynamic>.from(products.map((x) => x.toJson())),
-  };
-}
-
-class Product {
-  final String product;
-  final int amount;
-  final String id;
-
-  Product({
-    required this.product,
-    required this.amount,
-    required this.id,
-  });
-
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
-    product: json["product"],
-    amount: json["amount"],
-    id: json["_id"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "product": product,
-    "amount": amount,
-    "_id": id,
-  };
+        "idProduct": idProduct,
+        "image": image,
+        "name": name,
+        "price": price,
+        "quantity": quantity,
+        "userId": userId,
+      };
 }

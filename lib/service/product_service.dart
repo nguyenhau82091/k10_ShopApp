@@ -1,8 +1,4 @@
 import 'dart:convert';
-
-import 'package:k10_shopapp/auth/login.dart';
-import 'package:k10_shopapp/service/saveUser_service.dart';
-
 import '../api/api.dart';
 import '../model/product_model.dart';
 import 'package:http/http.dart' as http;
