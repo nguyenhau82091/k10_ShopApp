@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:k10_shopapp/model/product_model.dart';
 
+import '../service/saveUser_service.dart';
 import '../widget/customToast.dart';
 import '../widget/my_textInput.dart';
 
@@ -35,6 +36,7 @@ class _OrderScreenState extends State<OrderScreen> {
   int countTotal = 0;
 
   Future<void> create() async {
+    final currentUser = await UserManager().getUser();
     String name = nameController.text;
     int phone = int.parse(phoneController.text);
     String email = emailController.text;
@@ -46,9 +48,10 @@ class _OrderScreenState extends State<OrderScreen> {
         : 'Thanh toán online';
     String note = noteController.text;
     String sale = saleController.text;
-    String userId = "655078c8be66b7c8af84f0e7";
-    String token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTUwNzhjOGJlNjZiN2M4YWY4NGYwZTciLCJlbWFpbCI6InZpbmhkZXYzMUBnbWFpbC5jb20iLCJpYXQiOjE2OTk4NzkwMzksImV4cCI6MTcwMjQ3MTAzOX0.4vsnADQrxCVPi9ps_dCDwoXOv6VbY99ZrpXSBFGv138";
+    String userId = currentUser!.id;
+    print("UserId.............$userId");
+    String token = currentUser!.token;
+    print("Token..............$token");
     if (name.isEmpty ||
         phone == null ||
         email.isEmpty ||
@@ -75,7 +78,7 @@ class _OrderScreenState extends State<OrderScreen> {
       );
     }
     try {
-      final createOrder = await orderService.createOrder(
+       final createOrder = await orderService.createOrder(
           userId,
           email,
           name,
@@ -92,7 +95,7 @@ class _OrderScreenState extends State<OrderScreen> {
           token);
 
       if (createOrder != null) {
-        print("add cart thành công");
+        print("Thanh toán thành công");
       }
     } catch (e) {
       print("Lỗi...........$e");
