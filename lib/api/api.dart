@@ -8,3 +8,4 @@ const API_CART = URL + "/api/cart";
 const API_NEWS = URL + "/api/news";
 const API_CHAT = URL + "/api/chat";
 const API_ORDER = URL + "/order";
+const API_EDIT_PROFILE = URL + "/api/user";

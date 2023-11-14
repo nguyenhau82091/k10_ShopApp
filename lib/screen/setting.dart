@@ -1,44 +1,52 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:k10_shopapp/model/setting_model.dart';
+import 'package:k10_shopapp/widget/avatar_card.dart';
+import 'package:k10_shopapp/widget/setting_tile.dart';
 
-class SettingPage extends StatelessWidget {
-  const SettingPage({Key? key}) : super(key: key);
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
 
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          ListTile(
-            title: Text("Thông tin tài khoản"),
-            leading: Icon(Icons.person),
-            onTap: () {
-              // Navigate to account info page
-            },
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const AvatarCard(),
+                const SizedBox(height: 20),
+                const Divider(),
+                const SizedBox(height: 10),
+                Column(
+                  children: List.generate(
+                    settings.length,
+                    (index) => SettingTile(setting: settings[index]),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 10),
+                Column(
+                  children: List.generate(
+                    settings2.length,
+                    (index) => SettingTile(setting: settings2[index]),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
-          ListTile(
-            title: Text("Cài đặt thông báo"),
-            leading: Icon(Icons.notifications),
-            onTap: () {
-              // Navigate to notification settings page
-            },
-          ),
-          ListTile(
-            title: Text("Ngôn ngữ"),
-            leading: Icon(Icons.language),
-            onTap: () {
-              // Navigate to language settings page
-            },
-          ),
-          ListTile(
-            title: Text("Đăng xuất"),
-            leading: Icon(Icons.logout),
-            onTap: () {
-              Navigator.pushReplacementNamed(context, '/login');
-              // Log out user
-            },
-          ),
-        ],
+        ),
       ),
     );
   }

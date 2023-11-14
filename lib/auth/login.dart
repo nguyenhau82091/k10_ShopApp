@@ -5,7 +5,6 @@ import 'package:k10_shopapp/utils/color_utils.dart';
 import 'package:k10_shopapp/widget/my_button.dart';
 import 'package:k10_shopapp/widget/reusable_widget.dart';
 import 'package:k10_shopapp/service/auth_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
