@@ -4,6 +4,8 @@ import 'package:k10_shopapp/model/product_model.dart';
 import '../widget/customToast.dart';
 import '../widget/my_textInput.dart';
 
+import '../service/order_service.dart';
+
 enum SingingCharacter { lafayette, jefferson }
 
 class OrderScreen extends StatefulWidget {
@@ -23,12 +25,87 @@ class _OrderScreenState extends State<OrderScreen> {
   TextEditingController districtController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController noteController = TextEditingController();
-
+  TextEditingController saleController = TextEditingController();
   SingingCharacter? _character = SingingCharacter.lafayette;
+  int quantity = 1;
+  int sale = 0;
+  int total = 0;
+  int price = 0;
+  String nameProduct = "";
+  int countTotal = 0;
+
+  Future<void> create() async {
+    String name = nameController.text;
+    int phone = int.parse(phoneController.text);
+    String email = emailController.text;
+    String city = cityController.text;
+    String district = districtController.text;
+    String address = addressController.text;
+    String paymentMethod = _character == SingingCharacter.lafayette
+        ? 'Thanh toán khi nhận hàng'
+        : 'Thanh toán online';
+    String note = noteController.text;
+    String sale = saleController.text;
+    String userId = "655078c8be66b7c8af84f0e7";
+    String token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTUwNzhjOGJlNjZiN2M4YWY4NGYwZTciLCJlbWFpbCI6InZpbmhkZXYzMUBnbWFpbC5jb20iLCJpYXQiOjE2OTk4NzkwMzksImV4cCI6MTcwMjQ3MTAzOX0.4vsnADQrxCVPi9ps_dCDwoXOv6VbY99ZrpXSBFGv138";
+    if (name.isEmpty ||
+        phone == null ||
+        email.isEmpty ||
+        city.isEmpty ||
+        district.isEmpty ||
+        address.isEmpty) {
+      showDialog<void>(
+        context: context,
+        // false = user must tap button, true = tap outside dialog
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            title: Text('Thông Báo'),
+            content: Text('Các trường không được để trống'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Đóng'),
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+    try {
+      final createOrder = await orderService.createOrder(
+          userId,
+          email,
+          name,
+          total,
+          city,
+          district,
+          address,
+          paymentMethod,
+          sale,
+          phone,
+          nameProduct,
+          price,
+          quantity,
+          token);
+
+      if (createOrder != null) {
+        print("add cart thành công");
+      }
+    } catch (e) {
+      print("Lỗi...........$e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.product.imgUrls);
+    price = widget.product.price;
+    total = quantity * price;
+    nameProduct = widget.product.name;
+    countTotal = total - sale;
+    print(countTotal);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -62,32 +139,24 @@ class _OrderScreenState extends State<OrderScreen> {
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Thông Tin Khách Hàng",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            "Thông Tin Khách Hàng",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
                           Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Họ Và Tên:",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
+                              Text(
+                                "Họ Và Tên:",
+                                style: TextStyle(fontSize: 16),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -99,14 +168,9 @@ class _OrderScreenState extends State<OrderScreen> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Số điện thoại:",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
+                              Text(
+                                "Số điện thoại:",
+                                style: TextStyle(fontSize: 16),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -118,14 +182,9 @@ class _OrderScreenState extends State<OrderScreen> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Email:",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
+                              Text(
+                                "Email:",
+                                style: TextStyle(fontSize: 16),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -143,15 +202,9 @@ class _OrderScreenState extends State<OrderScreen> {
                                     width: 165,
                                     child: Column(
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: const [
-                                            Text(
-                                              "Tỉnh/Thành Phố:",
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ],
+                                        Text(
+                                          "Tỉnh/Thành Phố:",
+                                          style: TextStyle(fontSize: 16),
                                         ),
                                         const SizedBox(
                                           height: 10,
@@ -170,15 +223,9 @@ class _OrderScreenState extends State<OrderScreen> {
                                     width: 165,
                                     child: Column(
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: const [
-                                            Text(
-                                              "Quận/Huyện:",
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ],
+                                        Text(
+                                          "Quận/Huyện:",
+                                          style: TextStyle(fontSize: 16),
                                         ),
                                         const SizedBox(
                                           height: 10,
@@ -195,14 +242,9 @@ class _OrderScreenState extends State<OrderScreen> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Địa chỉ:",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
+                              Text(
+                                "Địa chỉ:",
+                                style: TextStyle(fontSize: 16),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -214,14 +256,9 @@ class _OrderScreenState extends State<OrderScreen> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
-                                  Text(
-                                    "Ghi chú:",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
+                              Text(
+                                "Ghi chú:",
+                                style: TextStyle(fontSize: 16),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -255,18 +292,13 @@ class _OrderScreenState extends State<OrderScreen> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Phương thức thanh toán",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            "Phương thức thanh toán",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           ListTile(
@@ -316,67 +348,67 @@ class _OrderScreenState extends State<OrderScreen> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Tóm tắt sản phẩm",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            "Tóm tắt sản phẩm",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
                           SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            children: [
-                              Image.network(
-                               widget.product.imgUrls[0],
-                                width: 100,
-                              ),
-                              SizedBox(width: 30,),
-                              Column(
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
                                 children: [
-                                  Row(
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    child: Image.network(
+                                      widget.product.imgUrls[0],
+                                      width: 135,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 30,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
                                         widget.product.name,
                                         style: TextStyle(fontSize: 16),
                                       ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
                                       Text(
-                                        "Số lượng:1",
+                                        "Số lượng: $quantity",
                                         style: TextStyle(fontSize: 14),
                                       ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
                                       Text(
-                                        "Gía:279000",
+                                        "Giá:${widget.product.price}",
                                         style: TextStyle(fontSize: 14),
+                                      ),
+                                      Container(
+                                        height: 1,
+                                        width: 120,
+                                        color: Colors.grey,
+                                      ),
+                                      Text(
+                                        "Tổng tiền: $total",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   )
                                 ],
-                              )
-                            ],
+                              ),
+                            ),
                           )
                         ],
                       ),
@@ -400,22 +432,24 @@ class _OrderScreenState extends State<OrderScreen> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Phương thức thanh toán",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            "Phương thức thanh toán",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
-                          SizedBox(height: 10,),
-                          MyTextInput(hintText: "Nhập mã Khuyến mại",),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          MyTextInput(
+                            hintText: "Nhập mã Khuyến mại",
+                            controller: saleController,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -445,6 +479,138 @@ class _OrderScreenState extends State<OrderScreen> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 30),
+                  Container(
+                    width: 400,
+                    height: 225,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            spreadRadius: 2,
+                            blurRadius: 2,
+                            offset: Offset(0, 2),
+                          )
+                        ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Tổng giá tiền",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "(" + quantity.toString() + "sản phẩm)",
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    total.toString(),
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Giảm giá",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    sale.toString(),
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "Cần Thanh toán",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(countTotal.toString(),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xffc89595),
+                                      )),
+                                ],
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          GestureDetector(
+                            onTap: create,
+                            child: Container(
+                              width: 400,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Color(0xffc89595),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Thanh Toán",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

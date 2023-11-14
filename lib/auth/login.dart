@@ -5,6 +5,7 @@ import 'package:k10_shopapp/utils/color_utils.dart';
 import 'package:k10_shopapp/widget/my_button.dart';
 import 'package:k10_shopapp/widget/reusable_widget.dart';
 import 'package:k10_shopapp/service/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -13,11 +14,20 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
+class UserAccount {
+  final String userId;
+  final String email;
+  final String password;
+
+  UserAccount(this.email, this.password, {this.userId = ''});
+}
+
 class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
   bool _isLoading = false;
   String _errorMessage = '';
+  UserAccount? _currentUser;
 
   Future<void> getData() async {
     final email = _emailTextController.text;
@@ -34,6 +44,7 @@ class _LoginPageState extends State<LoginPage> {
       if (login) {
         setState(() {
           _isLoading = true;
+          _currentUser = UserAccount(email, password);
         });
         Navigator.pushReplacementNamed(context, '/home');
       } else {
@@ -42,6 +53,25 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       print(e);
       _showErrorDialog('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+    }
+  }
+
+  Future<void> saveUserAccount() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('userId', _currentUser?.userId ?? '');
+    prefs.setString('email', _currentUser?.email ?? '');
+    prefs.setString('password', _currentUser?.password ?? '');
+  }
+
+  Future<void> loadUserAccount() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId');
+    final email = prefs.getString('email');
+    final password = prefs.getString('password');
+    if (userId != null && email != null && password != null) {
+      setState(() {
+        _currentUser = UserAccount(email, password, userId: userId);
+      });
     }
   }
 
