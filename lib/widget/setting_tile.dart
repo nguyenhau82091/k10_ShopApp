@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:k10_shopapp/constants.dart';
-import 'package:k10_shopapp/model/setting.dart';
+import 'package:k10_shopapp/model/setting_model.dart';
 
 class SettingTile extends StatelessWidget {
   final Setting setting;
+
   const SettingTile({
     super.key,
     required this.setting,
@@ -14,8 +15,14 @@ class SettingTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, setting.route);
-      }, // Navigation
+        if (setting.route == "/") {
+          // If the route is "/order", show the development notification
+          showDevelopmentNotification(context);
+        } else {
+          // Otherwise, navigate to the specified route
+          Navigator.pushNamed(context, setting.route);
+        }
+      },
       child: Row(
         children: [
           Container(
@@ -44,6 +51,23 @@ class SettingTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void showDevelopmentNotification(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text('Tính năng này hiện đang được phát triển...'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

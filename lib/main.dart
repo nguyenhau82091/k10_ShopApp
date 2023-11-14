@@ -6,7 +6,6 @@ import 'package:k10_shopapp/screen/contact.dart';
 import 'package:k10_shopapp/screen/edit_profile.dart';
 import 'package:k10_shopapp/screen/home_screen.dart';
 import 'package:k10_shopapp/screen/list_order.dart';
-import 'package:k10_shopapp/screen/new.dart';
 import 'package:k10_shopapp/screen/onboarding.dart';
 
 void main() {
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/home': (context) => HomeMenu(),
         '/contact': (context) => ContactInformation(),
-        '/new': (context) => CodePostScreen(),
+      
         '/edit': (context) => EditAccountScreen(),
         '/list_order': (context) => ListOrder(),
         '/community': (context) => CommunityPage(),

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:k10_shopapp/model/setting.dart';
+import 'package:k10_shopapp/model/setting_model.dart';
 import 'package:k10_shopapp/widget/avatar_card.dart';
 import 'package:k10_shopapp/widget/setting_tile.dart';
 
