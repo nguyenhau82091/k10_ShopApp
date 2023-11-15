@@ -151,8 +151,8 @@ class _CommunityPageState extends State<CommunityPage> {
                     ),
                     child: Image.asset(
                       'assets/image/gif1.gif',
-                      width: 500,
-                      height: 500,
+                      width: 800,
+                      height: 800,
                     ),
                   ),
                   const SizedBox(height: 20),

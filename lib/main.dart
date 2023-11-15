@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/home': (context) => HomeMenu(),
 
-        '/chat': (context) => ChatPage(),
 
         '/contact': (context) => ContactInformation(),
       

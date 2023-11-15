@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:k10_shopapp/screen/chatpage.dart';
+import 'package:k10_shopapp/widget/chat.dart';
+import 'package:provider/provider.dart';
 
 import '../model/product_model.dart';
 import '../service/product_service.dart';
@@ -13,7 +16,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  
+  final TextEditingController _usernameController = TextEditingController();
+
   bool isLoading = false;
   List<Product> products = [];
 
@@ -22,7 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getData();
   }
-  
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    super.dispose();
+  }
+
   Future<void> getData() async {
     try {
       final fetchData = await ProductService.fetchData();
@@ -60,15 +70,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               )
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(),
               ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/chat');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ChangeNotifierProvider(
+                  create: (context) => ChatProvider(),
+                  child: ChatPage(
+                    username: _usernameController.text.trim(),
+                  ),
+                ),
+              ),
+            );
           },
-          backgroundColor: Color(0xffc89595),
-          child: Icon(
+          backgroundColor: const Color(0xffc89595),
+          child: const Icon(
             Icons.message,
             color: Colors.white,
           ),
