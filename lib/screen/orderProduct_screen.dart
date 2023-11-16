@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:k10_shopapp/model/cart_model.dart';
 import 'package:k10_shopapp/model/product_model.dart';
 
 import '../service/saveUser_service.dart';
@@ -10,16 +9,16 @@ import '../service/order_service.dart';
 
 enum SingingCharacter { lafayette, jefferson }
 
-class OrderScreen extends StatefulWidget {
-  final List<Cart> cart;
+class OrderProductScreen extends StatefulWidget {
+  final Product product;
 
-  const OrderScreen({Key? key, required this.cart}) : super(key: key);
+  const OrderProductScreen({Key? key, required this.product}) : super(key: key);
 
   @override
   _OrderScreenState createState() => _OrderScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _OrderScreenState extends State<OrderProductScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -35,22 +34,6 @@ class _OrderScreenState extends State<OrderScreen> {
   int price = 0;
   List<String> nameProduct = [];
   int countTotal = 0;
-
-  int calculateTotalPrice() {
-    int totalPrice = 0;
-    widget.cart.forEach((cartItem) {
-      totalPrice += cartItem.price * cartItem.quantity;
-    });
-    return totalPrice;
-  }
-
-  int calculateTotalQuantity() {
-    int totalQuantity = 0;
-    widget.cart.forEach((cartItem) {
-      totalQuantity += cartItem.quantity;
-    });
-    return totalQuantity;
-  }
 
   Future<void> create() async {
     final currentUser = await UserManager().getUser();
@@ -109,6 +92,10 @@ class _OrderScreenState extends State<OrderScreen> {
           price,
           quantity,
           token);
+
+      // if (createOrder != null) {
+      //   print("Thanh toán thành công");
+      // }
     } catch (e) {
       print("Lỗi...........$e");
     }
@@ -116,8 +103,9 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    total = calculateTotalPrice();
-    quantity = calculateTotalQuantity();
+    price = widget.product.price;
+    total = quantity * price;
+    nameProduct = [widget.product.id];
     countTotal = total - sale;
     print(countTotal);
     return SafeArea(
@@ -347,6 +335,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   const SizedBox(height: 30),
                   Container(
                     width: 400,
+                    height: 200,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
@@ -372,67 +361,57 @@ class _OrderScreenState extends State<OrderScreen> {
                           SizedBox(
                             height: 10,
                           ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: widget.cart.length,
-                            itemBuilder: (context, index) {
-                              final cartItem = widget.cart[index];
-                              nameProduct = [cartItem.idProduct];
-                              return Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                        child: Image.network(
-                                          cartItem.image,
-                                          width: 135,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 30,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            cartItem.name,
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                          Text(
-                                            "Số lượng: ${cartItem.quantity}",
-                                            style: TextStyle(fontSize: 14),
-                                          ),
-                                          Text(
-                                            "Giá: ${cartItem.price}",
-                                            style: TextStyle(fontSize: 14),
-                                          ),
-                                          Container(
-                                            height: 1,
-                                            width: 120,
-                                            color: Colors.grey,
-                                          ),
-                                          Text(
-                                            "Tổng tiền: ${cartItem.price * cartItem.quantity}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      )
-                                    ],
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    child: Image.network(
+                                      widget.product.imgUrls[0],
+                                      width: 135,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
+                                  SizedBox(
+                                    width: 30,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.product.name,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      Text(
+                                        "Số lượng: $quantity",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Text(
+                                        "Giá:${widget.product.price}",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Container(
+                                        height: 1,
+                                        width: 120,
+                                        color: Colors.grey,
+                                      ),
+                                      Text(
+                                        "Tổng tiền: $total",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),

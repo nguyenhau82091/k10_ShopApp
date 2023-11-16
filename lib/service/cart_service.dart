@@ -7,7 +7,7 @@ class CartService {
       int quantity, int price, String name) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<Cart> existingCart = [];
-
+    print("priceAddcart.................$price");
     try {
       // Retrieve existing cart data
       List<String>? cartStrings = prefs.getStringList("cart");
@@ -72,5 +72,48 @@ class CartService {
       return true;
     }
     return false;
+  }
+
+  static Future<List<Cart>> updateCartQuantity(
+    String productId,
+    int quantity,
+  ) async {
+    print("quantityUpdate...............$quantity");
+    print("product............$productId");
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<Cart> existingCart = [];
+
+    try {
+      // Retrieve existing cart data
+      List<String>? cartStrings = prefs.getStringList("cart");
+      if (cartStrings != null) {
+        existingCart = cartStrings
+            .map((cartItem) => Cart.fromJson(json.decode(cartItem)))
+            .toList();
+      }
+
+      // Find the item with the specified productId in the existing cart
+      int itemIndex = existingCart
+          .indexWhere((cartItem) => cartItem.idProduct == productId);
+
+      if (itemIndex != -1) {
+        // Update the quantity of the item
+        existingCart[itemIndex] =
+            existingCart[itemIndex].copyWith(quantity: quantity);
+
+        // Convert the entire cart to JSON strings and save
+        final updatedCartStrings = existingCart
+            .map((cartItem) => jsonEncode(cartItem.toJson()))
+            .toList();
+        await prefs.setStringList("cart", updatedCartStrings);
+      }
+
+      print("Update cart quantity thành công");
+
+      return existingCart;
+    } catch (e) {
+      print("Lỗi.............$e");
+      return existingCart;
+    }
   }
 }

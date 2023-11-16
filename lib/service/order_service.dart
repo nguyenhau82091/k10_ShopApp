@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
-
-import '../api/api.dart';
-import '../model/order_model.dart';
 import 'package:http/http.dart' as http;
 
-class orderService {
-  static Future<List<Order>> createOrder(
+import '../api/api.dart';
+
+class OrderService {
+   // Replace with your actual API base URL
+
+   static Future<void> createOrder(
       String user,
       String email,
       String nameReceiver,
@@ -17,44 +17,57 @@ class orderService {
       String paymentCode,
       String promotionCode,
       int phoneReceiver,
-      String product,
+      List<String> productIds, // Change the type if necessary
       int price,
       int amount,
       String token,
       ) async {
-    List<Order> orders = [];
-    final url = Uri.parse(API_ORDER);
+    final url = Uri.parse(API_ORDER); // Replace with your actual API endpoint for creating orders
+
+    final orderProducts = productIds.map((productId) {
+      return {
+        "product": productId,
+        "price": price,
+        "amount": amount,
+      };
+    }).toList();
+
+    final Map<String, dynamic> requestBody = {
+      "user": user,
+      "email": email,
+      "nameReceiver": nameReceiver,
+      "totalPrice": totalPrice,
+      "province": province,
+      "district": district,
+      "address": address,
+      "paymentCode": paymentCode,
+      "promotionCode": promotionCode,
+      "phoneReceiver": phoneReceiver,
+      "orderProducts": orderProducts,
+    };
+print(orderProducts);
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
 
     try {
-      final createOrder = await http.post(url, body: {
-        "user": user,
-        "email": email,
-        "nameReceiver": nameReceiver,
-        "totalPrice": totalPrice.toString(),
-        "province": province,
-        "district": district,
-        "address": address,
-        "paymentCode": paymentCode,
-        "promotionCode": promotionCode,
-        "phoneReceiver": phoneReceiver.toString(),
-        "product": product,
-        "price": price.toString(),
-        "amount": amount.toString(),
-      }, headers: {
-        HttpHeaders.authorizationHeader: '${token}',
-      });
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
 
-      if (createOrder.statusCode == 201) {
-        // Parse the response body and create Order objects
-        // Add the created orders to the orders list
-        // Example: Assuming your API returns a JSON array of orders
-        print("Add order thành công");
+      if (response.statusCode == 201) {
+        // Order created successfully
+        print('Order created successfully');
+      } else {
+        // Handle error
+        print('Failed to create order. Status code: ${response.statusCode}');
       }
-
-      return orders;
     } catch (e) {
-      print("Lỗi.................$e");
-      return orders;
+      print('Error creating order: $e');
+      // Handle error
     }
   }
 }

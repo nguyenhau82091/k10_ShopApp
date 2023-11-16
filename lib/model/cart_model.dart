@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 List<Cart> categoryFromJson(String str) =>
     List<Cart>.from(json.decode(str).map((x) => Cart.fromJson(x)));
 
@@ -17,6 +19,8 @@ class Cart {
   final int price;
   final int quantity;
   final String userId;
+  bool isSelected;
+  TextEditingController quantityController;
 
   Cart({
     required this.idProduct,
@@ -25,7 +29,26 @@ class Cart {
     required this.price,
     required this.quantity,
     required this.userId,
-  });
+    this.isSelected = false,
+  }) : quantityController = TextEditingController();
+
+  Cart copyWith({
+    String? idProduct,
+    String? userId,
+    String? image,
+    int? quantity,
+    int? price,
+    String? name,
+  }) {
+    return Cart(
+      idProduct: idProduct ?? this.idProduct,
+      userId: userId ?? this.userId,
+      image: image ?? this.image,
+      quantity: quantity ?? this.quantity,
+      price: price ?? this.price,
+      name: name ?? this.name,
+    );
+  }
 
   factory Cart.fromJson(Map<String, dynamic> json) => Cart(
         idProduct: json["idProduct"],
@@ -34,6 +57,7 @@ class Cart {
         price: json["price"],
         quantity: json["quantity"],
         userId: json["userId"],
+        isSelected: json['isSelected'] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,5 +67,6 @@ class Cart {
         "price": price,
         "quantity": quantity,
         "userId": userId,
+        'isSelected': isSelected,
       };
 }
