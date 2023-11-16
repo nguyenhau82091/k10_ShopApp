@@ -14,15 +14,15 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
-    print('json ${json['user']}');
+    // print('json ${json['user']}');
     final jsonUser = json['user'];
-    print(jsonUser["_id"]);
-    print(DateTime.parse(jsonUser['createdAt']));
+    final jsonToken = json['token'] != null ? json['token'] : json['code'];
+    print(jsonToken);
     print("vaoo User");
     final data =  User(
       id: jsonUser['_id'],
       email: jsonUser['email'],
-      token: json['token'],
+      token: jsonToken,
       status: jsonUser['status'],
       createdAt: DateTime.parse(jsonUser['createdAt']),
     );
