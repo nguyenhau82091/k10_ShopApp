@@ -28,7 +28,21 @@ class _LoginPageState extends State<LoginPage> {
     //   }
     // });
   }
-
+  Future<void> loginGG() async {
+    try{
+      final loginGG = await AuthService.loginGG();
+      if (loginGG) {
+        setState(() {
+          _isLoading = true;
+        });
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        _showErrorDialog('Tên đăng nhập hoặc mật khẩu không chính xác.');
+      }
+    }catch(e) {
+      print(e);
+    }
+  }
   Future<void> getData() async {
     final email = _emailTextController.text;
     final password = _passwordTextController.text;
@@ -150,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
                 MyButton(
                   text: 'Đăng nhập với Google',
-                  onTap: AuthService.loginGG,
+                  onTap: loginGG,
                   image: Image.asset(
                     'assets/logo/icons_googl.png',
                     width: 24,

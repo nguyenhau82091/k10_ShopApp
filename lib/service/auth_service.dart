@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:k10_shopapp/api/api.dart';
 import 'package:http/http.dart' as http;
+import 'package:k10_shopapp/api/google_signIn_api.dart';
 import 'package:k10_shopapp/auth/login.dart';
 import 'package:k10_shopapp/model/user_Model.dart';
 import 'package:k10_shopapp/service/saveUser_service.dart';
@@ -68,15 +69,6 @@ class AuthService {
         if (responseBody != null && responseBody.containsKey("data")) {
           _loginUser = User.fromJson(responseBody["data"]);
           UserManager().setUser(_loginUser!);
-
-          // Hãy bỏ chú thích mã SharedPreferences nếu cần
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // prefs.setString('userId', _loginUser!.id);
-          // prefs.setString('userEmail', _loginUser!.email);
-          // prefs.setString('userToken', _loginUser!.token);
-          // prefs.setBool('userVerified', _loginUser!.verified);
-          // prefs.setString('userCreatedAt', _loginUser!.createdAt.toIso8601String());
-
           print('Đăng nhập thành công');
           print(response.body);
           return true;
@@ -96,7 +88,46 @@ class AuthService {
   }
 
 
-  static Future<void> loginGG() async {}
+  static Future<bool> loginGG() async {
+    final user = await GoogleSignInApi.login();
+    final ggAuth = await user?.authentication;
+    final token = ggAuth?.accessToken.toString();
+    print(token);
+    print(user);
+    User? _loginUser;
+    final apiUrl = API_GG_LOGIN;
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{'token': token, 'name': user?.displayName}),
+      );
+
+      if (response.statusCode == 201) {
+        final Map<String, dynamic>? responseBody = json.decode(response.body);
+
+        if (responseBody != null && responseBody.containsKey("data")) {
+          _loginUser = User.fromJson(responseBody["data"]);
+          UserManager().setUser(_loginUser!);
+          print('Đăng nhập thành công');
+          print(response.body);
+          return true;
+        } else {
+          print('Phản hồi đăng nhập thiếu khóa "data"');
+          return false;
+        }
+      } else {
+        print('Đăng nhập thất bại với mã trạng thái: ${response.statusCode}');
+        print('Nội dung phản hồi: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Lỗi: $e');
+      return false;
+    }
+  }
   static Future<bool> ForgotPassword(String email, String newpw) async {
     final apiUrl = API_FORGOT_PASSWORD;
 
