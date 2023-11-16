@@ -48,7 +48,9 @@ class _BlogPageState extends State<BlogPage> {
                   );
                 })
             : Center(
-                child: CircularProgressIndicator(),
+                child:  Center(
+                  child: Image.asset("assets/image/Loading-unscreen.gif",width: 100,),
+                ),
               ));
   }
 }

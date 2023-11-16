@@ -3,7 +3,7 @@ import 'package:k10_shopapp/model/product_model.dart';
 import '../../service/cart_service.dart';
 import '../../service/saveUser_service.dart';
 import '../../widget/customToast.dart';
-import '../oder_screen.dart';
+import '../orderProduct_screen.dart';
 
 class detailProduct extends StatelessWidget {
   final Product product;
@@ -22,7 +22,7 @@ class detailProduct extends StatelessWidget {
     if (productAdded) {
       return CustomToast.showCenterShortToast("Sản phẩm đã tồn tại");
     }
-    CartService.addCart(productst, user, image, price, quantity, name);
+    CartService.addCart(productst, user, image, quantity, price, name);
     CustomToast.showCenterShortToast("Thêm thành công");
   }
 
@@ -140,7 +140,7 @@ class detailProduct extends StatelessWidget {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => OrderScreen(
+                                          builder: (context) => OrderProductScreen(
                                                 product: product,
                                               )))
                                 },

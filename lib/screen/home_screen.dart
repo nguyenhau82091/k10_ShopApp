@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               )
             : Center(
-                child: CircularProgressIndicator(),
+                child: Image.asset("assets/image/Loading-unscreen.gif",width: 100,),
               ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

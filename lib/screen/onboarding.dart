@@ -2,29 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:intro_screen_onboarding_flutter/introduction.dart';
 import 'package:intro_screen_onboarding_flutter/introscreenonboarding.dart';
 import 'package:k10_shopapp/auth/login.dart';
-import 'package:k10_shopapp/home_menu.dart';
 
 class OnBoardingPage extends StatelessWidget {
   OnBoardingPage({super.key});
 
   final List<Introduction> list = [
     Introduction(
-      title: 'Title 1',
-      subTitle: 'Browse the menu and order directly from the application',
+      title: 'Khởi Nguồn',
+      subTitle: 'Câu chuyện bắt nguồn từ tình yêu và sự tinh tế của người chồng.',
       imageUrl: 'assets/image/onboarding1.png',
       imageHeight: 350,
       imageWidth: 350,
     ),
     Introduction(
-      title: 'Title 2',
-      subTitle: 'Your order will be immediately collected and sent',
+      title: 'Cam Kết',
+      subTitle: 'Sử dụng tối đa những nguyên liệu từ thiên nhiên.',
       imageUrl: 'assets/image/onboarding2.png',
       imageHeight: 350,
       imageWidth: 350,
     ),
     Introduction(
-      title: 'Title 3',
-      subTitle: 'Pick up delivery at your door and enjoy groceries',
+      title: 'Nhận Diện Thương Hiệu',
+      subTitle:
+          'JilGyungYi tin rằng vẻ đẹp đích thực đến từ hạnh phúc khi phụ nữ cảm thấy thoải mái và tự tin',
       imageUrl: 'assets/image/onboarding3.png',
       imageHeight: 350,
       imageWidth: 350,

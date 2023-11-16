@@ -21,6 +21,12 @@ class _HomeMenuState extends State<HomeMenu> {
     const SettingsScreen(),
   ];
 
+  void updateSelectedIndex(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
