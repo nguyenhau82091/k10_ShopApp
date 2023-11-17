@@ -1,147 +1,141 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:k10_shopapp/model/chat_model.dart';
-import 'package:k10_shopapp/widget/chat.dart';
-import 'package:provider/provider.dart';
+
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:web_socket_channel/io.dart';
 
 class ChatPage extends StatefulWidget {
-  final String username;
-  const ChatPage({Key? key, required this.username}) : super(key: key);
+  const ChatPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  late IO.Socket _socket;
-  final TextEditingController _messageInputController = TextEditingController();
-
-  _sendMessage() {
-    _socket.emit('message', {
-      'message': _messageInputController.text.trim(),
-      'sender': widget.username
-    });
-    _messageInputController.clear();
-  }
-
-  _connectSocket() {
-    _socket.onConnect((data) => print('Connection established: $data'));
-    _socket.onConnectError((data) => print('Connect Error: $data'));
-    _socket
-        .onDisconnect((data) => print('Socket.IO server disconnected: $data'));
-    _socket.on(
-      'message',
-      (data) => Provider.of<ChatProvider>(context, listen: false).addNewMessage(
-        Message.fromJson(data),
-      ),
-    );
-  }
+  TextEditingController messageController = TextEditingController();
+  List<String> messages = [];
+  late IO.Socket socket;
 
   @override
   void initState() {
     super.initState();
-
-    _socket = IO.io(
-      'http://54.196.170.115:9001',
-    );
-
-    _connectSocket();
+    connectAndListen();
   }
 
-  @override
-  void dispose() {
-    _messageInputController.dispose();
-    super.dispose();
+  void connectAndListen() {
+    socket = IO.io('http://54.196.170.115:9001',
+        IO.OptionBuilder().setTransports(['websocket']).build());
+
+    socket.onConnect((_) {
+      print('connect');
+      socket.emit('msg', 'test');
+    });
+
+    socket.on('chat message', (data) {
+      // Listen for incoming messages and update the state
+      setState(() {
+        messages.add(data);
+      });
+    });
+
+    socket.onDisconnect((_) => print('disconnect'));
+  }
+
+  void sendMessage() {
+    String message = messageController.text;
+    String room = 'USER2';
+    if (message.isNotEmpty && socket.connected) {
+      socket.emit('sendMessage', {
+        'message': message,
+        'roomName': room,
+      });
+      // Update the state to display the sent message
+      setState(() {
+        messages.add(message);
+      });
+      messageController.text = '';
+    } else {
+      print(
+          'Error: Message not sent. Socket not connected or message is empty.');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Socket.IO'),
+        title: Text('Trò Chuyện Cùng Admin'),
+        backgroundColor: Color(0xffc89595),
       ),
       body: Column(
         children: [
           Expanded(
-            child: Consumer<ChatProvider>(
-              builder: (_, provider, __) => ListView.separated(
-                padding: const EdgeInsets.all(16),
-                itemBuilder: (context, index) {
-                  final message = provider.messages[index];
-                  return Wrap(
-                    alignment: message.senderUsername == widget.username
-                        ? WrapAlignment.end
-                        : WrapAlignment.start,
-                    children: [
-                      Card(
-                        color: message.senderUsername == widget.username
-                            ? Theme.of(context).primaryColorLight
-                            : Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment:
-                                message.senderUsername == widget.username
-                                    ? CrossAxisAlignment.end
-                                    : CrossAxisAlignment.start,
-                            children: [
-                              Text(message.message),
-                              Text(
-                                DateFormat('hh:mm a').format(message.sentAt),
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
+            child: ListView.builder(
+              reverse: true,
+              itemCount: messages.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Align(
+                    alignment: messages[index].startsWith('You: ')
+                        ? Alignment.bottomLeft
+                        : Alignment.bottomRight,
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: messages[index].startsWith('You: ')
+                            ? Colors.blue
+                            : Colors.grey,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16.0),
+                          topRight: Radius.circular(16.0),
+                          bottomLeft: messages[index].startsWith('You: ')
+                              ? Radius.circular(16.0)
+                              : Radius.circular(0.0),
+                          bottomRight: messages[index].startsWith('You: ')
+                              ? Radius.circular(0.0)
+                              : Radius.circular(16.0),
                         ),
-                      )
-                    ],
-                  );
-                },
-                separatorBuilder: (_, index) => const SizedBox(
-                  height: 5,
-                ),
-                itemCount: provider.messages.length,
-              ),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-            ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-            ),
-            child: SafeArea(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _messageInputController,
-                      decoration: const InputDecoration(
-                        hintText: 'Type your message here...',
-                        border: InputBorder.none,
+                      ),
+                      child: Text(
+                        messages[index],
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      if (_messageInputController.text.trim().isNotEmpty) {
-                        _sendMessage();
-                      }
-                    },
-                    icon: const Icon(Icons.send),
-                  )
-                ],
-              ),
+                );
+              },
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: TextField(
+                      controller: messageController,
+                      decoration:
+                          InputDecoration(hintText: 'Enter your message'),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: sendMessage,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    socket.dispose(); // Đóng kết nối khi widget bị dispose
+    super.dispose();
   }
 }

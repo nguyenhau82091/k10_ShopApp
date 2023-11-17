@@ -76,16 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ChangeNotifierProvider(
-                  create: (context) => ChatProvider(),
-                  child: ChatPage(
-                    username: _usernameController.text.trim(),
-                  ),
-                ),
-              ),
-            );
+                context, MaterialPageRoute(builder: (context) => ChatPage()));
           },
           backgroundColor: const Color(0xffc89595),
           child: const Icon(
