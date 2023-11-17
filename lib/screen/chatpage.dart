@@ -1,90 +1,103 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:http/http.dart' as http;
-import 'package:k10_shopapp/api/api.dart';
+
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  const ChatPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  _ChatPageState createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  List<types.Message> _messages = [];
-  final _user = const types.User(
-    id: '655045f3be66b7c8af84eb05',
-  );
+  TextEditingController _messageController = TextEditingController();
+  List<String> _messages = [];
+  late IO.Socket socket;
 
-  Future<void> _sendMessage(String text) async {
-    try {
-      final response = await http.post(
-        Uri.parse(API_CHAT), // API endpoint để gửi tin nhắn
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'user_id': _user.id,
-          'text': text,
-        }),
-      );
+  @override
+  void initState() {
+    super.initState();
+    connectAndListen();
+  }
 
-      if (response.statusCode == 201) {
-        print('Message sent');
-      } else {
-        throw Exception('Failed to send message');
-      }
-    } catch (e) {
-      print('Error sending message: $e');
-    }
+  void connectAndListen() {
+    socket = IO.io('http://54.196.170.115:9001',
+        IO.OptionBuilder().setTransports(['websocket']).build());
+    socket.onConnect((_) {
+      print('connect');
+      socket.emit('msg', 'test');
+    });
+
+    socket.onDisconnect((_) => print('disconnect'));
+  }
+
+  void sendMessage() {
+    String message = _messageController.text;
+    String room = "USER2";
+
+    Map<String, dynamic> messageData = {
+      "roomName": room,
+      "message": {
+        "position": "right",
+        "type": "text",
+        "text": message,
+        "date": DateTime.now().toUtc().toIso8601String(),
+        "owner": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
+      },
+    };
+
+    socket.emit('sendMessage', messageData);
+
+    _messageController.text = '';
+    print("Sent a message: $messageData");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat', style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xffc89595),
+        title: Text('Trò Chuyện Cùng Admin'),
+        backgroundColor: Color(0xffc89595),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Chat(
-          messages: _messages,
-          onSendPressed: _handleSendPressed,
-          user: _user,
-          theme: const DefaultChatTheme(
-            inputBorderRadius: BorderRadius.all(Radius.circular(15)),
-            inputBackgroundColor: Color(0xffc89595),
-            inputTextColor: Colors.white,
-            primaryColor: Color(0xffc89595),
-            secondaryColor: Color(0xffc89595),
-            sendButtonIcon: Icon(
-              Icons.send,
-              color: Colors.white,
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_messages[index]),
+                );
+              },
             ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: InputDecoration(hintText: 'Enter your message'),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: sendMessage,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  void _handleSendPressed(types.PartialText message) {
-    final textMessage = types.TextMessage(
-      author: _user,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: 'new_message_id', // Replace with a unique ID
-      text: message.text,
-    );
-
-    _addMessage(textMessage);
-    _sendMessage(message.text); // Gửi tin nhắn qua API
-  }
-
-  void _addMessage(types.Message message) {
-    setState(() {
-      _messages.insert(0, message);
-    });
+  @override
+  void dispose() {
+    socket.dispose(); // Đóng kết nối khi widget bị dispose
+    super.dispose();
   }
 }

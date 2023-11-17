@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:k10_shopapp/widget/item_product.dart';
 
 import '../model/order_model.dart';
 import '../service/order_service.dart';
-import '../service/product_service.dart';
 import '../service/saveUser_service.dart';
+import 'package:intl/intl.dart';
+
+import 'detail/detailListOrder.dart';
 
 class ListOrder extends StatefulWidget {
   const ListOrder({super.key});
@@ -45,26 +46,37 @@ class _ListOrderState extends State<ListOrder> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("List Order"),
+          title: const Text("Danh sách đơn hàng"),
           backgroundColor: Color(0xffc89595),
         ),
         body: isLoading
             ? ListView.builder(
-                itemCount: order.length,
-                itemBuilder: (context, index) {
-                  final product = order[index];
-                  return GestureDetector(
-                    child: Card(
-                      child: ListTile(
-                        title: Text("${product.orderProducts}"),
-                      ),
-                    ),
-                  );
-                })
-            : Center(
-                child: Center(
-                  child: Image.asset("assets/image/Loading-unscreen.gif",width: 100,),
+            itemCount: order.length,
+            itemBuilder: (context, index) {
+              final orderItem = order[index];
+              final formattedPrice =
+              NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                  .format(orderItem.totalPrice);
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => DetailOrder(order: orderItem,)));
+                },
+                child: Card(
+                  child: ListTile(
+                      title: Text("Giá trị đơn hàng:${formattedPrice}"),
+                      subtitle: Text("Ngày Tạo đơn:${orderItem.createdAt}")
+                  ),
                 ),
-              ));
+              );
+            })
+            : Center(
+          child: Center(
+            child: Image.asset(
+              "assets/image/Loading-unscreen.gif",
+              width: 100,
+            ),
+          ),
+        ));
   }
 }

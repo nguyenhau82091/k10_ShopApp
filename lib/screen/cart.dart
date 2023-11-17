@@ -5,7 +5,7 @@ import '../service/cart_service.dart';
 import '../service/saveUser_service.dart';
 import '../widget/customToast.dart';
 import 'oder_screen.dart';
-
+import 'package:intl/intl.dart';
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
 
@@ -69,6 +69,10 @@ class _CartPageState extends State<CartPage> {
                       quantityController.text = carts.quantity.toString();
                       print("aaaaaaaaa........${carts.quantity}");
                       productId = [carts.idProduct];
+                      final formattedPrice = NumberFormat.currency(
+                        locale: 'vi_VN',
+                        symbol: '₫',
+                      ).format(carts.price);
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Card(
@@ -108,7 +112,7 @@ class _CartPageState extends State<CartPage> {
                                           style: TextStyle(fontSize: 16),
                                         ),
                                         Text(
-                                          "${carts.price}",
+                                          "${formattedPrice}",
                                           style: TextStyle(
                                               fontSize: 14, color: Colors.red),
                                         ),

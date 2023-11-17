@@ -1,90 +1,150 @@
-// To parse this JSON data, do
-//
-//     final order = orderFromJson(jsonString);
-
-import 'package:meta/meta.dart';
-import 'dart:convert';
-
-Order orderFromJson(String str) => Order.fromJson(json.decode(str));
-
-String orderToJson(Order data) => json.encode(data.toJson());
-
 class Order {
-  final String user;
-  final String email;
-  final String nameReceiver;
-  final int totalPrice;
-  final String province;
-  final String district;
-  final String address;
-  final String paymentCode;
-  final String promotionCode;
-  final int phoneReceiver;
-  final List<OrderProduct> orderProducts;
+  String id;
+  String user;
+  String status;
+  String nameReceiver;
+  int totalPrice;
+  String email;
+  int phoneReceiver;
+  String province;
+  String district;
+  String address;
+  String paymentCode;
+  List<OrderProduct> orderProducts;
+  List<Product> products;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
   Order({
+    required this.id,
     required this.user,
-    required this.email,
+    required this.status,
     required this.nameReceiver,
     required this.totalPrice,
+    required this.email,
+    required this.phoneReceiver,
     required this.province,
     required this.district,
     required this.address,
     required this.paymentCode,
-    required this.promotionCode,
-    required this.phoneReceiver,
     required this.orderProducts,
+    required this.products,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json) => Order(
-    user: json["user"],
-    email: json["email"],
-    nameReceiver: json["nameReceiver"],
-    totalPrice: json["totalPrice"],
-    province: json["province"],
-    district: json["district"],
-    address: json["address"],
-    paymentCode: json["paymentCode"],
-    promotionCode: json["promotionCode"],
-    phoneReceiver: json["phoneReceiver"],
-    orderProducts: List<OrderProduct>.from(json["orderProducts"].map((x) => OrderProduct.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "user": user,
-    "email": email,
-    "nameReceiver": nameReceiver,
-    "totalPrice": totalPrice,
-    "province": province,
-    "district": district,
-    "address": address,
-    "paymentCode": paymentCode,
-    "promotionCode": promotionCode,
-    "phoneReceiver": phoneReceiver,
-    "orderProducts": List<dynamic>.from(orderProducts.map((x) => x.toJson())),
-  };
+  factory Order.fromJson(Map<String, dynamic> json) {
+    return Order(
+      id: json['_id'],
+      user: json['user'],
+      status: json['status'],
+      nameReceiver: json['nameReceiver'],
+      totalPrice: json['totalPrice'],
+      email: json['email'],
+      phoneReceiver: json['phoneReceiver'],
+      province: json['province'],
+      district: json['district'],
+      address: json['address'],
+      paymentCode: json['paymentCode'],
+      orderProducts: (json['orderProducts'] as List)
+          .map((product) => OrderProduct.fromJson(product))
+          .toList(),
+      products: (json['products'] as List)
+          .map((product) => Product.fromJson(product))
+          .toList(),
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+    );
+  }
 }
 
 class OrderProduct {
-  final String product;
-  final int price;
-  final int amount;
+  String id;
+  String product;
+  String order;
+  int price;
+  int amount;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   OrderProduct({
+    required this.id,
     required this.product,
+    required this.order,
     required this.price,
     required this.amount,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
-  factory OrderProduct.fromJson(Map<String, dynamic> json) => OrderProduct(
-    product: json["product"],
-    price: json["price"],
-    amount: json["amount"],
-  );
+  factory OrderProduct.fromJson(Map<String, dynamic> json) {
+    return OrderProduct(
+      id: json['_id'],
+      product: json['product'],
+      order: json['order'],
+      price: json['price'],
+      amount: json['amount'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+    );
+  }
+}
 
-  Map<String, dynamic> toJson() => {
-    "product": product,
-    "price": price,
-    "amount": amount,
-  };
+class Product {
+  String id;
+  String status;
+  String name;
+  int amount;
+  int price;
+  List<String> imgUrls;
+  String categoryCode;
+  String mainUse;
+  String slogan;
+  String ingredient;
+  String where;
+  String license;
+  String certificate;
+  String commit;
+  DateTime createdAt;
+  DateTime updatedAt;
+
+  Product({
+    required this.id,
+    required this.status,
+    required this.name,
+    required this.amount,
+    required this.price,
+    required this.imgUrls,
+    required this.categoryCode,
+    required this.mainUse,
+    required this.slogan,
+    required this.ingredient,
+    required this.where,
+    required this.license,
+    required this.certificate,
+    required this.commit,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['_id'],
+      status: json['status'],
+      name: json['name'],
+      amount: json['amount'],
+      price: json['price'],
+      imgUrls: (json['imgUrls'] as List).cast<String>(),
+      categoryCode: json['categoryCode'],
+      mainUse: json['mainUse'],
+      slogan: json['slogan'],
+      ingredient: json['ingredient'],
+      where: json['where'],
+      license: json['license'],
+      certificate: json['certificate'],
+      commit: json['commit'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+    );
+  }
 }
